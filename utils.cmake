@@ -15,6 +15,14 @@ function(ROBOCIN_APPEND_QT5_PREFIX_PATH OUTPUT_DIRS)
 endfunction()
 
 macro(ROBOCIN_LINK_QT5_LIBRARIES TARGET_NAME)
+  include_directories(${CMAKE_BINARY_DIR})
+
+  set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+  set(CMAKE_AUTOUIC ON)
+  set(CMAKE_AUTOMOC ON)
+  set(CMAKE_AUTORCC ON)
+
   ROBOCIN_APPEND_QT5_PREFIX_PATH(QT_HINT_DIRS $ENV{HOME}/Qt /opt/qt)
   foreach (LIBRARY_NAME ${ARGN})
     find_package(Qt5 ${QT5_DEFAULT_VERSION} COMPONENTS ${LIBRARY_NAME} REQUIRED HINTS ${QT_HINT_DIRS})
@@ -30,12 +38,6 @@ macro(ROBOCIN_MAKE_QT_TEST TEST_NAME)
   cmake_minimum_required(VERSION 3.15)
 
   project(${TEST_NAME})
-
-  set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-  set(CMAKE_AUTOUIC ON)
-  set(CMAKE_AUTOMOC ON)
-  set(CMAKE_AUTORCC ON)
 
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -69,4 +71,23 @@ macro(ROBOCIN_LINK_FUNDAMENTAL_LIBRARIES TARGET_NAME)
   ROBOCIN_LINK_OPENGL(${TARGET_NAME})
   ROBOCIN_LINK_PROTOBUF(${TARGET_NAME})
   ROBOCIN_LINK_QT5_LIBRARIES(${TARGET_NAME} Widgets Core Gui OpenGL Concurrent Network Test Svg)
+endmacro()
+
+macro(ROBOCIN_DOXYGEN_CUSTOM_TARGET TARGET_NAME ROOT_PATH)
+  find_package(Doxygen)
+
+  if (Doxygen_FOUND)
+    set(DOXYGEN_IN ${ROOT_PATH}/docs/Doxyfile)
+    set(DOXYGEN_OUT ${ROOT_PATH}/build/Doxyfile.out)
+
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+
+    add_custom_target(${TARGET_NAME}
+            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+            WORKING_DIRECTORY ${ROOT_PATH}/docs
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM)
+  else ()
+    message(Doxygen was not found.)
+  endif ()
 endmacro()
