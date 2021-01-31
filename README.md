@@ -11,7 +11,7 @@
 
     _ex:_
 
-    ```makefile
+    ```CMake
     macro(ROBOCIN_LINK_PROTOBUF TARGET_NAME)
       include(FindProtobuf)
       find_package(Protobuf REQUIRED)
