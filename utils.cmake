@@ -34,7 +34,7 @@ function(ROBOCIN_ADD_TEST_SUBDIR TEST_NAME)
 endfunction()
 
 macro(ROBOCIN_MAKE_QT_TEST TEST_NAME)
-  cmake_minimum_required(VERSION 3.15)
+  cmake_minimum_required(VERSION 3.19)
 
   project(${TEST_NAME})
 
