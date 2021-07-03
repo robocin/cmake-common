@@ -17,12 +17,12 @@ endfunction()
 macro(ROBOCIN_LINK_QT6_LIBRARIES TARGET_NAME)
   ROBOCIN_APPEND_QT6_PREFIX_PATH(QT_HINT_DIRS $ENV{HOME}/qt $ENV{HOME}/Qt /opt/qt /opt/Qt)
 
-  foreach(DIR ${QT_HINT_DIRS})
+  foreach (DIR ${QT_HINT_DIRS})
     list(APPEND CMAKE_PREFIX_PATH ${DIR})
-  endforeach()
+  endforeach ()
 
   foreach (LIBRARY_NAME ${ARGN})
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${LIBRARY_NAME} REQUIRED)
+    find_package(QT NAMES Qt6 COMPONENTS ${LIBRARY_NAME} REQUIRED)
     find_package(Qt${QT_VERSION_MAJOR} ${QT6_DEFAULT_VERSION} COMPONENTS ${LIBRARY_NAME} REQUIRED)
 
     target_link_libraries(${TARGET_NAME} PUBLIC Qt${QT_VERSION_MAJOR}::${LIBRARY_NAME})
@@ -34,7 +34,7 @@ function(ROBOCIN_ADD_TEST_SUBDIR TEST_NAME)
 endfunction()
 
 macro(ROBOCIN_MAKE_QT_TEST TEST_NAME)
-  cmake_minimum_required(VERSION 3.19)
+  cmake_minimum_required(VERSION 3.16)
 
   project(${TEST_NAME})
 
